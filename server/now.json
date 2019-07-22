@@ -1,7 +1,16 @@
 {
-    "name": "cluster0",
+    "name": "flying-penguin",
     "version": 2,
+    "builds": [
+      {
+        "src": "index.js",
+        "use": "@now/node-server"
+      }
+    ],
+    "routes": [
+      { "src": "/.*", "dest": "index.js" }
+    ],
     "env": {
-      "MONGODB_URI": "@ozan"
+      "MONGO_URI": "@ozan"
     }
   }
