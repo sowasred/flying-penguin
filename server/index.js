@@ -2,10 +2,13 @@ import express from 'express';
 import cors from 'cors';
 import monk from 'monk';
 import {Filter} from 'bad-words'
+import dotenv from ('dotenv').config();
  
 const app = express();
 
-const db = monk('mongodb+srv://ozan:ozan@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority')
+// const db = monk()
+
+const db = monk(process.env.MONGO_URI || 'mongodb+srv://ozan:<password>@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority')
 
 // import collection to const
 const wishes = db.get('wishes');
@@ -23,6 +26,16 @@ app.get('/', (req,res) => {
         "hey":"Whasup"          
     })   
 })
+
+app.get('/wishes', (req, res) => {
+    wishes
+    .find()
+    .then(wishes => {
+        res.json(wishes);
+    })
+})
+
+
 function isValidWish(wishData){
     return wishData.name && wishData.name.toString().trim() !== '' &&
     wishData.content && wishData.content.toString().trim() !== ''
@@ -51,13 +64,6 @@ app.post('/wishes', (req,res) => {
     
 })
 
-app.get('/wishes', (req, res) => {
-    wishes
-    .find()
-    .then(wishes => {
-        res.json(wishes);
-    })
-})
 
 app.listen(port, () => {
     console.log('listening on 5000');

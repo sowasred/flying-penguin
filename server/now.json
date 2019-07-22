@@ -1,0 +1,7 @@
+{
+    "name": "cluster0",
+    "version": 2,
+    "env": {
+      "MONGODB_URI": "@ozan"
+    }
+  }
