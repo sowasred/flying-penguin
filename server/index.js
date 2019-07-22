@@ -6,7 +6,9 @@ const app = express();
 
 // const db = monk()
 
-const db = monk(process.env.MONGO_URI || 'mongodb+srv://ozan:<password>@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority')
+// const db = monk(process.env.MONGO_URI || 'mongodb+srv://ozan:<password>@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority')
+
+const db = monk('mongodb+srv://ozan:<password>@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority')
 
 // import collection to const
 const wishes = db.get('wishes');

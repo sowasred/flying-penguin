@@ -2,7 +2,7 @@
 const form = document.querySelector("form");
 const loadingGif = document.querySelector('.loading');
 const wishesElement = document.querySelector('.wishes');
-const API_URL = 'http://localhost:5000/wish';
+const API_URL = 'https://cluster0.muldurozan.now.sh/wishes';
 
 
 loadingGif.getElementsByClassName.display = '';
@@ -37,7 +37,7 @@ form.addEventListener('submit', (event) =>{
             setTimeout(() => {
                 form.style.display = '';
             }, 20000)
-            
+
             listAllWishes();
         })
 })
