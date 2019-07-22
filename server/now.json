@@ -1,6 +1,9 @@
 {
     "name": "cluster0",
     "version": 2,
+    "routes": [
+        { "src": "/.*", "dest": "index.js" }
+      ],
     "env": {
       "MONGODB_URI": "@ozan"
     }
