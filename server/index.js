@@ -1,9 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import monk from 'monk';
-import {Filter} from 'bad-words'
-import dotenv from ('dotenv').config();
- 
+import { Filter } from 'bad-words'
 const app = express();
 
 // const db = monk()
@@ -45,8 +43,8 @@ app.post('/wishes', (req,res) => {
     if(isValidWish(req.body)){
         //insert into db
         const wishData = {
-            name: req.body.name.toString(),
-            content: req.body.wish.toString(),
+            name: filter.clean(req.body.name.toString().trim()),
+            content: filter.clean(req.body.content.toString().trim()),
             created: new Date()
         }
         wishes
