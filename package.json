@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/sowasred/flying-penguin#readme",
   "dependencies": {
+    "bad-words": "^3.0.2",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "monk": "^7.0.0",
