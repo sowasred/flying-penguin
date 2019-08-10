@@ -7,7 +7,7 @@ const loadMoreElement = document.querySelector('#loadMore');
 const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/v2/wishes' : 'https://flying-penguin-api.muldurozan.now.sh/wishes';
 
 let skip = 0;
-let limit = 5;
+let limit = 10;
 let loading = false;
 let finished = false;
 
@@ -58,8 +58,8 @@ form.addEventListener('submit', (event) =>{
             form.reset();
             setTimeout(() => {
               form.style.display = '';
-            }, 30000);
-            listAllMews();
+            }, 2000);
+            listAllWishes();
           }).catch(errorMessage => {
             form.style.display = '';
             errorElement.textContent = errorMessage;
@@ -67,7 +67,7 @@ form.addEventListener('submit', (event) =>{
             loadingGif.style.display = 'none';
           });
         } else {
-          errorElement.textContent = 'Name and content are required!';
+          errorElement.textContent = 'Please Fill Name and Your Wish Before Sending.';
           errorElement.style.display = '';
         }
       });
@@ -92,7 +92,9 @@ function listAllWishes(reset = true){
             
             result.wishes.forEach(wish => {
                 const div = document.createElement('div');
+                div.classList.add('notes');
                 const header = document.createElement('h3');
+
                 header.textContent = wish.name;
 
                 const wishes = document.createElement('p');
@@ -105,6 +107,8 @@ function listAllWishes(reset = true){
                 div.appendChild(header);
                 div.appendChild(wishes);
                 div.appendChild(date);
+
+
 
                 wishesElement.appendChild(div);
 

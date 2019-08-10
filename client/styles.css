@@ -1,0 +1,89 @@
+body {
+    padding:1%;
+    margin: 1%;
+    /* background-color:#46ACC2; */
+    background-color: #4cbcb7;
+    font-family: 'Indie Flower', cursive;
+    font-size: 20px;
+    font-weight: 900;    
+}
+
+header {
+    font-family: 'Saira Stencil One', cursive !important;
+    text-align: center;
+}
+.loading {
+    height: normal;
+
+}
+#infos{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    
+}
+.info{
+    font-size:20px;
+    width: 20em;
+    font-weight: 100;
+}
+#flypenguin{
+    height: 10em;
+
+}
+
+.wish-form {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+label {
+    margin: 0 auto;
+    padding: 0.5em;
+}
+.error-message {
+margin:0 auto;
+background:wheat;}
+
+#content {
+    height: 8em;
+    font-family: 'Indie Flower', cursive;
+    font-weight: 900;
+    font-size: 20px;
+
+
+}
+#name {
+    font-family: 'Indie Flower', cursive;
+    font-size: 20px;
+    font-weight: 900;
+
+}
+
+button{
+    font-family: 'Saira Stencil One', cursive !important;
+    font-size: 20px;
+    background-color: #cae2e1;
+}
+
+button:hover {
+    background: #4cbcb7;
+}
+
+.wishes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+   
+}
+.notes{
+    margin:1em;
+    padding: 1em;
+    border:2px solid #4D4730;
+    border-radius: 15%;
+    background-color: #4B6858;
+}
+
+
