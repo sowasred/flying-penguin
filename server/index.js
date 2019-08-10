@@ -6,11 +6,12 @@ const rateLimit = require('express-rate-limit');
 
 
 const app = express();
+const mongouri = 'mongodb+srv://ozan:ozan@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority';
+const db = monk(process.env.MONGO_URI || 'localhost:27017/wishlist');
 
-const db = monk(process.env.MONGO_URI || 'localhost:27017/penguin-wishes');
 
 db.then(() => {console.log("DBDB")})
-const mews = db.get('wishes');
+const wishes = db.get('wishes');
 const filter = new Filter();
 
 app.enable('trust proxy');
@@ -19,61 +20,101 @@ app.enable('trust proxy');
 app.use(cors());
 
 
-// import collection to const
-
-const filter = new Filter()
-
-port = process.env.PORT || 3000;
-
-// Any in coming request has a content type of app json will be parse and by this middleware and put on the body
+app.use(cors());
 app.use(express.json());
 
-app.get('/', (req,res) => {
-    res.json({
-        "hey":"Whasup",
-        "ses":"ses2"         
-    })   
-})
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Flying Penguin Waiting For User Wishes..'
+  });
+});
 
 
-app.get('/wishes', (req, res) => {
+app.get('/wishes', (req, res,next) => {
     wishes
     .find()
     .then(wishes => {        
         res.json(wishes);
-    })
-})
+    }).catch(next);
+});
+
+app.get('/v2/wishes', (req, res, next) => {
+    // let skip = Number(req.query.skip) || 0;
+    // let limit = Number(req.query.limit) || 10;
+    let { skip = 0, limit = 5, sort = 'desc' } = req.query;
+    skip = parseInt(skip) || 0;
+    limit = parseInt(limit) || 5;
+  
+    skip = skip < 0 ? 0 : skip;
+    limit = Math.min(50, Math.max(1, limit));
+  
+    Promise.all([
+      wishes
+        .countDocuments,
+      wishes
+        .find({}, {
+          skip,
+          limit,
+          sort: {
+            created: sort === 'desc' ? -1 : 1
+          }
+        })
+    ])
+      .then(([ total, wishes ]) => {
+        res.json({
+        wishes,
+          meta: {
+            total,
+            skip,
+            limit,
+            has_more: total - (skip + limit) > 0,
+          }
+        });
+      }).catch(next);
+  });
 
 
-function isValidWish(wishData){
- return wishData.name && wishData.name.toString().trim() !== '' &&
- wishData.content && wishData.content.toString().trim() !== '';
+function isValidWish(wish){
+ return wish.name && wish.name.toString().trim() !== '' && wish.name.toString().trim().length <= 50 &&
+ wish.content && wish.content.toString().trim() !== ''&& wish.content.toString().trim().length <= 140;
 }
 
-app.post('/wishes', (req,res) => {
-    if(isValidWish(req.body)){
-        //insert into db
-        const wishData = {
-            name: filter.clean(req.body.name.toString().trim()),
-            content: filter.clean(req.body.content.toString().trim()),
-            created: new Date()
-        }
-        wishes
-        .insert(wishData)
+app.use(rateLimit({
+    windowMs: 3 * 1000, // 30 seconds
+    max: 1
+  }));
+
+  const createWish = (req, res, next) => {
+    if (isValidWish(req.body)) {
+      const wish = {
+        name: filter.clean(req.body.name.toString().trim()),
+        content: filter.clean(req.body.content.toString().trim()),
+        created: new Date()
+      };
+  
+      wishes
+        .insert(wish)
         .then(createdWish => {
-            res.json(createdWish)
-        })
-
-    }else {
-        res.status(422);
-        res.json({
-            message:"Hey this is not a valid wish !!"
-        })
+          res.json(createdWish);
+        }).catch(next);
+    } else {
+      res.status(422);
+      res.json({
+        message: 'Hey! Name and Content are required! Name cannot be longer than 50 characters. Content cannot be longer than 140 characters.'
+      });
     }
-    
-})
+  };
 
-
-app.listen(port, () => {
-    console.log('listening on 3000');
-});
+  app.post('/wishes', createWish);
+  app.post('/v2/wishes', createWish);
+  
+  app.use((error, req, res, next) => {
+    res.status(500);
+    res.json({
+      message: error.message
+    });
+  });
+  
+  app.listen(5000, () => {
+    console.log('Listening on http://localhost:5000');
+  });
