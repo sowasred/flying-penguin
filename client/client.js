@@ -2,32 +2,31 @@
 const form = document.querySelector("form");
 const loadingGif = document.querySelector('.loading');
 const wishesElement = document.querySelector('.wishes');
-const API_URL = 'https://cluster0.muldurozan.now.sh/wishes';
+const API_URL = 'https://flying-penguin-api.muldurozan.now.sh/wishes';
 
 
-loadingGif.getElementsByClassName.display = '';
+loadingGif.getElementsByClassName.display = 'none';
 
 listAllWishes();
 
 
 form.addEventListener('submit', (event) =>{
     event.preventDefault();
-
-    const data = FormData(form);
-    const name = data.get('name');
-    const content = data.get('content');
+    const name = document.querySelector('#name').value;
+    const content = document.querySelector('#content').value;
+    
 
     const wishData = {
         name,
         content
     };
-
+    
     form.style.display = 'none'
     loadingGif.style.display = ''
     
     fetch(API_URL, {
         method: 'POST',
-        body: JSON.stringify(wishData),
+        body: wishData.json(),
         headers: {
             'content-type': 'application/json'
         }        
@@ -37,7 +36,7 @@ form.addEventListener('submit', (event) =>{
             setTimeout(() => {
                 form.style.display = '';
             }, 20000)
-
+            
             listAllWishes();
         })
 })
@@ -45,7 +44,8 @@ form.addEventListener('submit', (event) =>{
 function listAllWishes(){
     wishesElement.innerHTML = '';
     fetch(API_URL)
-        .then(response => response.json())
+        .then((response) => {response.json()
+        console.log(response)})
         .then(wishes => {
             wishes.reverse();
             wishes.forEach(wish => {

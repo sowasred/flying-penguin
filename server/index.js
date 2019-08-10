@@ -1,39 +1,40 @@
 const express = require('express');
 const cors = require('cors');
+const monk = require('monk');
 const Filter = require('bad-words');
+const rateLimit = require('express-rate-limit');
 
 
 const app = express();
+
+const db = monk(process.env.MONGO_URI || 'localhost:27017/penguin-wishes');
+
+db.then(() => {console.log("DBDB")})
+const mews = db.get('wishes');
+const filter = new Filter();
+
+app.enable('trust proxy');
+
+// allow cross origin requests
 app.use(cors());
-// const db = monk()
 
-
-
-// Retrieve
-
-// Connect to the db
 
 // import collection to const
-
-
 
 const filter = new Filter()
 
 port = process.env.PORT || 3000;
 
-
-const url = 'mongodb+srv://ozan:ozan@cluster0-gnvcb.mongodb.net/test?retryWrites=true&w=majority'; // Connection URL
-const db = require('monk')(url);
-
-const wishes = db.get('wihes')
 // Any in coming request has a content type of app json will be parse and by this middleware and put on the body
 app.use(express.json());
 
 app.get('/', (req,res) => {
     res.json({
-        "hey":"Whasup"          
+        "hey":"Whasup",
+        "ses":"ses2"         
     })   
 })
+
 
 app.get('/wishes', (req, res) => {
     wishes
@@ -74,5 +75,5 @@ app.post('/wishes', (req,res) => {
 
 
 app.listen(port, () => {
-    console.log('listening on 5000');
+    console.log('listening on 3000');
 });
