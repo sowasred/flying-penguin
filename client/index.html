@@ -24,24 +24,24 @@
                     Find a peaceful place where you can type your wish and then click "send wish". Your wish should be fulfilled soon.
             </p>
         </div>
+        <div class="goodbye"></div>
+
     </header>
     <main>
         <form class="wish-form">
             <div class="error-message"></div>
             <label for="name">Name</label>
             <input class="u-full-width" type="text" id="name" name="name">
-            <label for="wish">Wish your Thing</label>
-            <input class="u-full-width" type="text" id="content" name="content">
+            <label for="wish">Type Your Wish</label>
+            <textarea rows = "5" cols = "60" class="u-full-width"  id="content" name = "content"></textarea>
             <button>Send Wish</button>
         </form>
         <div class="loading">
-            <img src="./images/spinner.gif" alt="loading">
+            <img id="spin" src="./images/spinner.gif" alt="loading">
         </div>
         <div class="wishes"></div>
 
-        <div class="container">
-            <p id="loadMore">Loading...</p>
-        </div>
+     
 
     </main>
     <footer>Coded by Ozan Muldur.</footer>

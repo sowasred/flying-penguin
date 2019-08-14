@@ -3,22 +3,14 @@ const form = document.querySelector("form");
 const loadingGif = document.querySelector('.loading');
 const wishesElement = document.querySelector('.wishes');
 const errorElement = document.querySelector('.error-message');
-const loadMoreElement = document.querySelector('#loadMore');
+const goodbye = document.querySelector('.goodbye')
 const API_URL = window.location.hostname === '127.0.0.1' ? 'http://localhost:5000/v2/wishes' : 'https://flying-penguin-api.muldurozan.now.sh/wishes';
 
-let skip = 0;
-let limit = 10;
-let loading = false;
-let finished = false;
+
 
 loadingGif.style.display = 'none';
 
-document.addEventListener('scroll', () => {
-    const rect = loadMoreElement.getBoundingClientRect();
-    if (rect.top < window.innerHeight && !loading && !finished) {
-      loadMore();
-    }
-  });
+
 
 listAllWishes();
 
@@ -43,25 +35,9 @@ form.addEventListener('submit', (event) =>{
             body: JSON.stringify(wish),
             headers: {
               'content-type': 'application/json'
-            }
-          }).then(response => { 
-            console.log(response)     
-            if (!response.ok) {
-              const contentType = response.headers.get('content-type');
-              if (contentType.includes('json')) {
-                return response.json().then(error => Promise.reject(error.message));
-              } else {
-                return response.text().then(message => Promise.reject(message));
-              }
-            }
-          }).then(() => {
-            form.reset();
-            setTimeout(() => {
-              form.style.display = '';
-            }, 2000);
-            listAllWishes();
-          }).catch(errorMessage => {
-            form.style.display = '';
+            },            
+          }
+          ).catch(errorMessage => {
             errorElement.textContent = errorMessage;
             errorElement.style.display = '';
             loadingGif.style.display = 'none';
@@ -70,27 +46,26 @@ form.addEventListener('submit', (event) =>{
           errorElement.textContent = 'Please Fill Name and Your Wish Before Sending.';
           errorElement.style.display = '';
         }
-      });
+        console.log('why')
+
+        listAllWishes();
+        goodbye.textContent = "You can only wish a day. See you tomorrow, Flying Penguin Bless You!"
+        goodbye.style.display = 'flex';  
         
-function loadMore() {
-            skip += limit;
-            listAllWishes(false);
-          }
+      });
 
 
-function listAllWishes(reset = true){
-    loading = true;
-    if (reset) {
+function listAllWishes(){   
+      goodbye.style.display= 'none'
+
         wishesElement.innerHTML = '';
-        skip = 0;
-        finished = false;
-      }
-    fetch(`${API_URL}?skip=${skip}&limit=${limit}`)
+      
+    fetch(API_URL)
         .then((response) => response.json())        
         .then(result => {
-            console.log(result);
-            
-            result.wishes.forEach(wish => {
+            result.forEach(wish => {
+              console.log("hey");
+              
                 const div = document.createElement('div');
                 div.classList.add('notes');
                 const header = document.createElement('h3');
@@ -108,18 +83,10 @@ function listAllWishes(reset = true){
                 div.appendChild(wishes);
                 div.appendChild(date);
 
-
-
                 wishesElement.appendChild(div);
 
             })
             loadingGif.style.display = 'none';
-            if (!result.meta.has_more) {
-                loadMoreElement.style.visibility = 'hidden';
-                finished = true;
-              } else {
-                loadMoreElement.style.visibility = 'visible';
-              }
-              loading = false;
+       
         })
 }
