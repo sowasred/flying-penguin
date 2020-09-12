@@ -27,7 +27,7 @@
     "mongoose": "^5.6.6",
     "monk": "^7.0.0",
     "morgan": "^1.9.1",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.1"
